@@ -150,7 +150,6 @@ const AddGroup = () => {
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "#f00";
   }
-  const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
   const [selectedOptions, setSelectedOptions] = useState([]);
   console.log(selectedOptions);
   const handleCheckboxChange = (event) => {
@@ -274,7 +273,7 @@ const AddGroup = () => {
                   onClick={(e) => {
                     setTempUser(null);
                     const listfilter = listMember.filter(
-                      (listMember) => listMember.userId == tempUser.userId
+                      (listMember) => listMember.userId === tempUser.userId
                     );
                     if (listfilter?.length === 0) {
                       for (let i = 0; i < 10; i++) {

@@ -1,6 +1,5 @@
 /** @format */
 import { useLoaderData } from "react-router";
-import logo from "../assets/logo.svg";
 import { Link } from "react-router-dom";
 import cancel from "../assets/cancel.png";
 import success from "../assets/success.png";
@@ -45,7 +44,7 @@ export const AuthLoader = async ({ request }) => {
     `${process.env.REACT_APP_API_URL}/api/auth/validate?token=${token}&user_id=${user_id}`,
     {
       method: "POST",
-      withCredntials: true,
+      withCredentials: true,
       credentials: "include",
       headers: {
         Accept: "application/json",
