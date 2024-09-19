@@ -65,7 +65,17 @@ useEffect(() => {
   Changesortchatrooms(sortedChatrooms);
   }
 }, [chatrooms]);
-
+  useEffect(()=>{
+  const  UpdateAva=async()=>{
+        const data= await getRequest(`${process.env.REACT_APP_API_URL}/api/users/currentUser`);
+        console.log(data)
+        if(!data.error)
+        {
+          changeava(data.ava)
+        }
+    }
+    UpdateAva();
+  },[])
     const messagesEndRef = useRef(null);
     const messagesEndRef1 = useRef(null);
     useEffect(() => {
