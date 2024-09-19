@@ -304,7 +304,7 @@ const AddGroupIcon = () => {
             </div>
             <p className=" text-stone-400 text-sm">Danh sách gần đây</p>
             <div className=" overflow-auto space-y-4 h-4/6">
-              {listMember.length > 0 ? (
+              {listMember?.length > 0 ? (
                 listMember.map((member) => (
                   <div key={member.userId} className="flex items-center mb-2">
                     <input
