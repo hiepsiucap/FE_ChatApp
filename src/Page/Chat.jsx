@@ -39,6 +39,7 @@ const Chat = () => {
   const [BodyMessage, ChangeBodyMessage]=useState(null)
   const [ava, changeava] = useState();
   const [loading, setLoading]= useState(false);
+  const [loadingchatroom, setloadingchatroom]= useState(true);
   const [hasMore, setHasMore] = useState(true);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [chatrooms, Changechatrooms] = useState(null);
@@ -115,6 +116,7 @@ useEffect(() => {
         });
       } else {
         Changechatrooms(data);
+        setloadingchatroom(false);
         if (data[0])
           try {
             const response = await GetMessage(1, 0)
@@ -151,6 +153,7 @@ useEffect(() => {
                 text: err,
                 icon: "error",
               });
+              setloadingchatroom(false);
             }
           }
       }
@@ -413,6 +416,12 @@ useEffect(() => {
             className="px-4 pt-4 h-screen overflow-auto  flex space-y-2 flex-col  "
             style={{ height: "calc(100vh - 18px)" }}
           >
+            {loadingchatroom &&   <div className="">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+</svg>
+            </div>
+}
             {sortchatrooms &&
               sortchatrooms.map((chatroom) => {
                 return (

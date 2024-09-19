@@ -4,6 +4,7 @@ import Modal from "react-modal";
 
 import { getRequest, postRequest } from "../utilz/Request/Request";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { Audio } from "react-loader-spinner";
 import _ from "lodash";
 const customStyles = {
   content: {
@@ -303,7 +304,7 @@ const AddGroupIcon = () => {
             </div>
             <p className=" text-stone-400 text-sm">Danh sách gần đây</p>
             <div className=" overflow-auto space-y-4 h-4/6">
-              {listMember &&
+              {listMember.length > 0 ? (
                 listMember.map((member) => (
                   <div key={member.userId} className="flex items-center mb-2">
                     <input
@@ -329,7 +330,18 @@ const AddGroupIcon = () => {
                       </p>
                     </label>
                   </div>
-                ))}
+                ))
+              ) : (
+                <Audio
+                  height="80"
+                  width="80"
+                  radius="9"
+                  color="green"
+                  ariaLabel="loading"
+                  wrapperStyle
+                  wrapperClass
+                />
+              )}
             </div>
           </div>
           <div className=" absolute bottom-20 w-full border border-gray-500"></div>
