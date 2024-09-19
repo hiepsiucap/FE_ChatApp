@@ -279,9 +279,7 @@ const AddGroupIcon = () => {
                       (listMember) => listMember.userId == tempUser.userId
                     );
                     if (listfilter?.length === 0) {
-                      for (let i = 0; i < 10; i++) {
-                        updateListMember((prev) => [...prev, tempUser]);
-                      }
+                      updateListMember((prev) => [...prev, tempUser]);
                     }
                   }}
                 >
