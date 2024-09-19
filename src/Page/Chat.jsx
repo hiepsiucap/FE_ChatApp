@@ -170,11 +170,6 @@ useEffect(() => {
       const result= await GetMessageWithController(controller,id ,0);
       if(result.error)
       {
-            Swal.fire({
-        title: "Tìm kiếm tin nhắn thất bại",
-        text: result.message,
-        icon: "error",
-      });
       return;
       }
       Changechatrooms((prev) => {
@@ -196,13 +191,6 @@ useEffect(() => {
       setHasMore(true);
       setPage(1);
     } catch (err) {
-      if (err.name !== "AbortError") {
-        Swal.fire({
-          title: "Tìm kiếm tin nhắn thất bại",
-          text: err,
-          icon: "error",
-        });
-      }
     }
   };
   const subscriptionsRef = useRef([]);
