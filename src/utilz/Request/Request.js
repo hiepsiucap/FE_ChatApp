@@ -110,7 +110,7 @@ export const GetMessageWithController = async (controller, id, page) => {
       `${process.env.REACT_APP_API_URL}/api/chatrooms/detailChatroomMessage/${id}?page=${page}`,
       {
         signal: controller.signal,
-        withCredntials: true,
+        withCredentials: true,
         credentials: "include",
         headers: {
           Accept: "application/json",
@@ -132,7 +132,7 @@ export const GetMessage = async (id, page) => {
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/api/chatrooms/detailChatroomMessage/${id}?page=${page}`,
       {
-        withCredntials: true,
+        withCredentials: true,
         credentials: "include",
         headers: {
           Accept: "application/json",
