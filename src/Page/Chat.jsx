@@ -148,11 +148,6 @@ useEffect(() => {
             setCurrentRooms(data[0]);
           } catch (err) {
             if (err.name !== "AbortError") {
-              Swal.fire({
-                title: "Tìm kiếm tin nhắn thất bại",
-                text: err,
-                icon: "error",
-              });
               setloadingchatroom(false);
             }
           }

@@ -5,7 +5,7 @@ export const postRequest = async (url, body) => {
   try {
     const response = await fetch(url, {
       method: "POST",
-      withCredntials: true,
+      withCredentials: true,
       credentials: "include",
       headers: {
         Accept: "application/json", // Đặt Accept header thành application/json
@@ -33,7 +33,7 @@ export const postRequest = async (url, body) => {
 export const patchRequest = async (url, body) => {
   const response = await fetch(url, {
     method: "PATCH",
-    withCredntials: true,
+    withCredentials: true,
     credentials: "include",
     headers: {
       Accept: "application/json", // Đặt Accept header thành application/json
@@ -58,7 +58,7 @@ export const patchRequest = async (url, body) => {
 export const putRequest = async (url, body) => {
   const response = await fetch(url, {
     method: "PUT",
-    withCredntials: true,
+    withCredentials: true,
     credentials: "include",
     headers: {
       Accept: "application/json", // Đặt Accept header thành application/json
@@ -88,7 +88,7 @@ export const getRequest = async (url) => {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    withCredntials: true,
+    withCredentials: true,
     // Bao gồm cookies nếu cần thiết
   });
   const data = await response.json();
