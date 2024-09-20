@@ -11,6 +11,7 @@ import { displayFirstMessageUser } from "../utilz/MessageUp";
 import Profile from "./Profile";
 import AddPeople from "../component/AddPeople";
 import AddGroupIcon from "../component/AddGroupIcon";
+import EachChatRoomMobile from "../component/EachChatRoomMobile";
 
 const customStyles = {
   content: {
@@ -23,12 +24,23 @@ const customStyles = {
     border: "0",
     padding: "0",
     zIndex: "50",
-    width: "25%",
+    width: "50%",
     height: "100%",
   },
   overlay: {
     backgroundColor: "rgba(100, 100, 100, 0.25)", // Màu nền phía sau modal
   },
+};
+const adjustWidthForMobile = () => {
+  const isMobile = window.innerWidth <= 768; // Breakpoint for mobile devices (768px)
+  const styles = {
+    ...customStyles,
+    content: {
+      ...customStyles.content,
+      width: isMobile ? "70%" : "25%", // 75% width for mobile, 25% for other devices
+    },
+  };
+  return styles;
 };
 Modal.setAppElement("#root");
 const Chat = () => {
@@ -47,6 +59,17 @@ const Chat = () => {
   const [chatrooms, Changechatrooms] = useState(null);
   const [sortchatrooms, Changesortchatrooms]= useState(null);
   const [page, setPage] = useState(1);
+  const [styles, setStyles] = useState(adjustWidthForMobile);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setStyles(adjustWidthForMobile);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
    const currentRoomRef = useRef(currentRooms);
   function updateAvatar(userId, newAvatar) {
     chatrooms?.forEach((room) => {
@@ -364,14 +387,14 @@ useEffect(() => {
         style={
           modalIsOpen
             ? {
-                ...customStyles,
+                ...styles,
                 content: {
-                  ...customStyles.content,
+                  ...styles.content,
                   // transform: "translate(-50%, -50%) scale(1)",
                   opacity: 1,
                 },
               }
-            : customStyles
+            : styles
         }
         contentLabel="Example Modal"
       >
@@ -380,9 +403,9 @@ useEffect(() => {
         </div>
       </Modal>
 
-      <div className=" flex w-full space-x-3 pb-2">
+      <div className=" flex w-full md:space-x-3 md:pb-2">
         <div
-          className=" flex bg-bg2 rounded-xl  flex-col h-screen  w-1/4 min-w-fit font-Roboto"
+          className=" hidden  md:flex bg-bg2 rounded-xl  flex-col h-screen  w-1/4 min-w-fit font-Roboto"
           style={{ height: "calc(100vh - 18px)", overflow: "hidden" }}
         >
           <div className=" flex justify-between items-center px-3">
@@ -427,7 +450,47 @@ useEffect(() => {
           </div>
         </div>
         <div
-          className=" flex bg-bg2   flex-col rounded-xl h-screen w-2/4 font-Roboto"
+          className="  md:hidden bg-bg2 rounded-xl items-center mr-2 flex py-3  flex-col h-screen w-1/6  font-Roboto"
+          style={{ height: "calc(100vh - 18px)", overflow: "hidden" }}
+        >
+          <div className=" flex  justify-between items-center pb-4 ">
+            <div className=" flex space-x-2">
+            {/* <AddGroupIcon></AddGroupIcon> */}
+              <button
+                className="  rounded-full"
+                onClick={() => setIsOpen(true)}
+              >
+                <img className=" w-12 h-12 rounded-full" src={user?.ava} alt="" />
+              </button>
+            </div>
+          </div>
+          <div className=" border w-full border-gray-700 mb-2 "></div>
+          <div
+            className="px-4 pt-4 h-screen overflow-auto  flex space-y-2 flex-col  "
+            style={{ height: "calc(100vh - 18px)" }}
+          >
+            {loadingchatroom &&   <div className=" animate-spin flex justify-center items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+</svg>
+            </div>
+}
+            {sortchatrooms &&
+              sortchatrooms.map((chatroom) => {
+                return (
+                  <EachChatRoomMobile
+                    currentRooms={currentRooms.roomId}
+                    id={chatroom.roomId}
+                    onClick={onClickHandler}
+                    chatroom={chatroom}
+                  ></EachChatRoomMobile>
+                );
+              })}
+          </div>
+            <AddGroupIcon></AddGroupIcon>
+        </div>
+        <div
+          className=" flex bg-bg2   flex-col rounded-xl h-screen w-full md:w-1/2 font-Roboto"
           style={{ height: "calc(100vh - 18px)", overflow: "hidden" }}
         >
         
@@ -660,7 +723,7 @@ useEffect(() => {
           </> }
         </div>
         <div
-          className=" flex bg-bg2 flex-col   rounded-xl h-screen w-1/4 font-Roboto"
+          className=" hidden md:flex bg-bg2 flex-col   rounded-xl h-screen w-1/4 font-Roboto"
           style={{ height: "calc(100vh - 18px)", overflow: "hidden" }}
         >
          { currentRooms?.length ==0 || changechatroomloading ? 

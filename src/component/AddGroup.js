@@ -18,7 +18,7 @@ const customStyles = {
     border: "0",
     padding: "0",
     zIndex: "50",
-    width: "40%",
+    width: "100%",
     height: "95%",
     boxShadow:
       "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
@@ -27,13 +27,32 @@ const customStyles = {
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Màu nền phía sau modal
   },
 };
+const UpdateStyleModal = () => {
+  const isMobile = window.innerWidth < 768;
+  const styles = {
+    ...customStyles,
+    content: {
+      ...customStyles.content,
+      width: isMobile ? "75%" : "100%", // 75% width for mobile, 25% for other devices
+    },
+  };
+  return styles;
+};
 Modal.setAppElement("#root");
 const AddGroup = () => {
+  const [style, updatestyle] = useState(UpdateStyleModal());
   const [listMember, updateListMember] = useState(null);
   const [GroupName, updateGroupName] = useState("");
   const [query, setQuery] = useState("");
   const [tempUser, setTempUser] = useState(null);
   console.log(listMember);
+  useEffect(() => {
+    const UpdateStyleGroup = () => {
+      updatestyle(UpdateStyleModal());
+    };
+    window.addEventListener("resize", UpdateStyleGroup);
+    return () => window.removeEventListener("resize", UpdateStyleGroup);
+  }, []);
   useEffect(() => {
     const GetListMember = async () => {
       try {
@@ -190,14 +209,14 @@ const AddGroup = () => {
         style={
           modalIsOpen
             ? {
-                ...customStyles,
+                ...style,
                 content: {
-                  ...customStyles.content,
+                  ...style.content,
                   // transform: "translate(-50%, -50%) scale(1)",
                   opacity: 1,
                 },
               }
-            : customStyles
+            : style
         }
         contentLabel="Example Modal"
       >
