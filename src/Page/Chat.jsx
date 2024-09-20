@@ -37,9 +37,11 @@ const Chat = () => {
   const [currentRooms, setCurrentRooms] = useState([]);
   const abortControllerRef = useRef(null);
   const [BodyMessage, ChangeBodyMessage]=useState(null)
-  const [ava, changeava] = useState();
+  const [user, changeuser] = useState();
+  const [backtobot, upbacktobot]= useState(true);
   const [loading, setLoading]= useState(false);
   const [loadingchatroom, setloadingchatroom]= useState(true);
+  const [changechatroomloading, setchangechatroomloading] =useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [chatrooms, Changechatrooms] = useState(null);
@@ -72,23 +74,25 @@ useEffect(() => {
         console.log(data)
         if(!data.error)
         {
-          changeava(data.ava)
+          changeuser(data)
         }
     }
     UpdateAva();
   },[])
+  useEffect(() => {
+    if(backtobot) 
+    messagesEndRef1.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
     const messagesEndRef = useRef(null);
     const messagesEndRef1 = useRef(null);
     useEffect(() => {
     currentRoomRef.current = currentRooms;
   }, [currentRooms]);
-    useEffect(() => {
-    messagesEndRef1.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
        if (stompClient && stompClient?.connected && BodyMessage && currentRooms) {
-      stompClient.send('/app/message', {}, JSON.stringify({chatRoomId: currentRooms.roomId, messageText: BodyMessage }));
+      stompClient.send('/app/message', {}, JSON.stringify({messageId: messages?.listMessage[messages?.listMessage.length-1]?.messageId,roomId: currentRooms.roomId,username:user.username,userId:user.userId,avaUser:user.ava,messageText: BodyMessage }));
       ChangeBodyMessage("")
     }
     else
@@ -143,7 +147,6 @@ useEffect(() => {
             const message = response?.listMessage?.find(
               (message) => message.userId === response.user_id
             );
-            changeava(message?.avaUser);
             console.log(response);
             setCurrentRooms(data[0]);
           } catch (err) {
@@ -166,6 +169,7 @@ useEffect(() => {
     abortControllerRef.current = controller;
     console.log(e.currentTarget.id);
     const id = e.currentTarget.id;
+    setchangechatroomloading(true);
     try {
       const result= await GetMessageWithController(controller,id ,0);
       if(result.error)
@@ -192,6 +196,7 @@ useEffect(() => {
       setPage(1);
     } catch (err) {
     }
+     setchangechatroomloading(false);
   };
   const subscriptionsRef = useRef([]);
     useEffect(() => {
@@ -211,13 +216,15 @@ useEffect(() => {
   });
       let subscriptions = [];
     if (stompClient && chatrooms.length>0) {
+  
       chatrooms.forEach((chatroom) => {
         if (!prevRoomIds.includes(chatroom.roomId)) {
         const subscription = stompClient.subscribe(`/topic/chatroom/${chatroom.roomId}`, (message) => {
           const newMessage = JSON.parse(message.body);
-
+          console.log(newMessage);
           if(currentRoomRef.current?.roomId === newMessage.roomId)
           {
+          upbacktobot(true);
           setMessages((prev)=> ({...prev,listMessage: [...prev.listMessage,{...newMessage}]}))
           Changechatrooms((prev)=>{
               if(prev)
@@ -283,6 +290,7 @@ useEffect(() => {
   }
 };
   useEffect(()=>{
+    upbacktobot(false);
     const LoadMoreMessage=async()=>{
     if(!hasMore)
     {
@@ -368,7 +376,7 @@ useEffect(() => {
         contentLabel="Example Modal"
       >
         <div className=" h-screen">
-          <Profile changeava={changeava} updateAvatar={updateAvatar}></Profile>
+          <Profile changeuser={changeuser} updateAvatar={updateAvatar}></Profile>
         </div>
       </Modal>
 
@@ -385,7 +393,7 @@ useEffect(() => {
                 className="  rounded-full"
                 onClick={() => setIsOpen(true)}
               >
-                <img className=" w-10 h-10 rounded-full" src={ava} alt="" />
+                <img className=" w-10 h-10 rounded-full" src={user?.ava} alt="" />
               </button>
             </div>
           </div>
@@ -409,6 +417,7 @@ useEffect(() => {
               sortchatrooms.map((chatroom) => {
                 return (
                   <EachChatRoom
+                    currentRooms={currentRooms.roomId}
                     id={chatroom.roomId}
                     onClick={onClickHandler}
                     chatroom={chatroom}
@@ -421,9 +430,19 @@ useEffect(() => {
           className=" flex bg-bg2   flex-col rounded-xl h-screen w-2/4 font-Roboto"
           style={{ height: "calc(100vh - 18px)", overflow: "hidden" }}
         >
+        
+          {
+        currentRooms?.length ==0 || changechatroomloading ? <div className=" flex relative w-full h-full justify-center items-center">
+         <div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 animate-spin">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+</svg>
+         </div>
+        </div> :
+        <>
           <div className=" flex py-3 px-3 justify-between items-center shadow-xl">
             <div className="flex space-x-2 items-center">
-              {currentRooms.group ? (
+              {currentRooms?.group ? (
                 <>
                   <div className="w-14 h-14 relative">
                     {currentRooms?.participants[0] && (
@@ -536,7 +555,7 @@ useEffect(() => {
               messages?.listMessage.length > 0 &&
               displayFirstMessageUser(
                 messages?.listMessage,
-                currentRooms.group,
+                currentRooms?.group,
                 messages.user_id
               ).map((message) => {
                 return (
@@ -544,7 +563,7 @@ useEffect(() => {
                     message={message}
                     key={message.messageId}
                     user={messages.user_id}
-                    group={currentRooms.group}
+                    group={currentRooms?.group}
                   ></Message>
                 );
               })}
@@ -638,14 +657,24 @@ useEffect(() => {
               </svg>
             </button>
           </form>
+          </> }
         </div>
         <div
           className=" flex bg-bg2 flex-col   rounded-xl h-screen w-1/4 font-Roboto"
           style={{ height: "calc(100vh - 18px)", overflow: "hidden" }}
         >
+         { currentRooms?.length ==0 || changechatroomloading ? 
+         <div className=" flex relative w-full h-full justify-center items-center">
+         <div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 animate-spin">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+</svg>
+         </div>
+        </div> :
+         <>
           <div className="flex flex-col  py-12 px-5">
             <div className=" flex flex-col items-center">
-              {currentRooms.group ? (
+              {currentRooms?.group ? (
                 <>
                   <div className="w-20 h-20 relative">
                     {currentRooms?.participants && (
@@ -808,6 +837,7 @@ useEffect(() => {
               </div>
             </div>
           </div>
+          </> }
         </div>
       </div>
     </section>

@@ -4,7 +4,7 @@ import { FindMinus } from "../utilz/FindMinus";
 import { NameTool } from "../utilz/NameTool";
 import { shortenString } from "../utilz/UpdateString";
 
-const EachChatRoom = ({ chatroom, onClick }) => {
+const EachChatRoom = ({ chatroom, onClick, currentRooms }) => {
   console.log(chatroom.roomId);
   if (chatroom.group) {
     if (!chatroom.seen) {
@@ -12,7 +12,11 @@ const EachChatRoom = ({ chatroom, onClick }) => {
         <button
           onClick={onClick}
           id={chatroom.roomId}
-          className=" flex justify-between px-2 py-2 items-center h-16"
+          className={
+            currentRooms == chatroom.roomId
+              ? "flex bg-stone-200 bg-opacity-30 rounded-lg  justify-between px-2 py-2 items-center h-16"
+              : "flex  justify-between px-2 py-2 items-center h-16"
+          }
         >
           <div className="flex space-x-3 items-center w-full">
             <div className="w-14 h-14 relative">
@@ -57,7 +61,11 @@ const EachChatRoom = ({ chatroom, onClick }) => {
         <button
           id={chatroom.roomId}
           onClick={onClick}
-          className="flex space-x-3 items-center w-full h-16"
+          className={
+            currentRooms == chatroom.roomId
+              ? "flex space-x-3 bg-stone-200 bg-opacity-30 rounded-lg py-2 items-center w-full h-16"
+              : "flex space-x-3  items-center w-full h-16"
+          }
         >
           <div className="">
             <div className="w-14 h-14 relative">
@@ -109,7 +117,11 @@ const EachChatRoom = ({ chatroom, onClick }) => {
         <button
           onClick={onClick}
           id={chatroom.roomId}
-          className=" flex justify-between px-2 py-2 items-center"
+          className={
+            currentRooms == chatroom.roomId
+              ? " flex justify-between bg-stone-200 bg-opacity-30 rounded-lg px-2 py-2 items-center"
+              : " flex justify-between px-2 py-2 items-center"
+          }
         >
           <div className="flex space-x-3 items-center w-full">
             {chatroom.participants[0] && (
@@ -150,7 +162,11 @@ const EachChatRoom = ({ chatroom, onClick }) => {
         <button
           id={chatroom.roomId}
           onClick={onClick}
-          className="flex space-x-3 items-center w-full"
+          className={
+            currentRooms == chatroom.roomId
+              ? "flex space-x-3 items-center w-full bg-stone-200 bg-opacity-30 py-2 rounded-lg"
+              : "flex space-x-3 items-center py-2 w-full"
+          }
         >
           {chatroom.participants[0] && (
             <div className=" px-1 relative">

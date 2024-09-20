@@ -26,7 +26,7 @@ const customStyles = {
 };
 
 Modal.setAppElement("#root");
-const Profile = ({ changeava, updateAvatar }) => {
+const Profile = ({ changeuser, updateAvatar }) => {
   const [info, updateinfo] = useState(null);
   const [modalIsOpen, setIsOpen] = useState(false);
   useEffect(() => {
@@ -82,7 +82,7 @@ const Profile = ({ changeava, updateAvatar }) => {
         setIsOpen(false);
       } else {
         updateinfo(data);
-        changeava(data.ava);
+        changeuser(data);
         updateAvatar(data.userId, data.ava);
         await Swal.fire({
           title: "Thay đổi ảnh đại diện thành công",
