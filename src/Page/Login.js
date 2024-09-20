@@ -19,7 +19,7 @@ const Login = () => {
     if (data.error) {
       await Swal.fire({
         title: "Đăng nhập thất bại",
-        text: data.message,
+        text: data?.message || "Lôĩ không xác định !",
         icon: "error",
       });
     } else {
