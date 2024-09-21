@@ -3,6 +3,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import { HomePage, RootLayout, Login, SignUp, Chat } from "./Page";
+import { ChatLoader } from "./Page/Chat";
 import AuthPage, { AuthLoader } from "./Page/Auth";
 function App() {
   const router = createBrowserRouter([
@@ -27,6 +28,7 @@ function App() {
     {
       path: "/chat",
       element: <Chat></Chat>,
+      loader: ChatLoader,
     },
     {
       path: "/auth",

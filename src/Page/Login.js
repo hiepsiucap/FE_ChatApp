@@ -30,7 +30,7 @@ const Login = () => {
   return (
     <section className=" h-screen flex flex-col space-x-2 items-center justify-center ">
       <img src={logo} alt="" className=" w-32" />
-      <div className=" text-3xl font-Roboto font-bold bg-gradient-to-r pt-2 from-primary via-secondary to-background inline-block text-transparent bg-clip-text">
+      <div className=" text-3xl font-Roboto font-bold bg-gradient-to-r text-center pt-2 from-primary via-secondary to-background inline-block text-transparent bg-clip-text">
         Kết nối với những người bạn yêu quý.
       </div>
       <form
@@ -39,14 +39,14 @@ const Login = () => {
       >
         <input
           type="text"
-          className=" px-3 pr-12 py-2 border text-lg w-1/4 rounded-md border-gray-300 "
+          className=" px-3 pr-12 py-2 border text-lg w-1/4 min-w-80 rounded-md border-gray-300 "
           placeholder="Email hoặc số điện thoại"
           value={username}
           onChange={(e) => ChangeEmail(e.target.value)}
         />
         <input
           type="text"
-          className=" px-3 pr-12 py-2 border text-lg w-1/4 rounded-md border-gray-300 "
+          className=" px-3 pr-12 py-2 border text-lg w-1/4 min-w-80 rounded-md border-gray-300 "
           placeholder="Mật khẩu"
           value={password}
           onChange={(e) => ChangePassword(e.target.value)}

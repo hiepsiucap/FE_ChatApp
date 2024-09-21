@@ -1,11 +1,12 @@
 /** @format */
 
 import { useEffect, useState } from "react";
-import { getRequest } from "../utilz/Request/Request";
+import { getRequest, postRequest } from "../utilz/Request/Request";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import Modal from "react-modal";
 import { Circles } from "react-loader-spinner";
 import AddGroup from "../component/AddGroup";
+import { useNavigate } from "react-router";
 Modal.setAppElement("#root");
 const customStyles = {
   content: {
@@ -28,7 +29,28 @@ const customStyles = {
 Modal.setAppElement("#root");
 const Profile = ({ changeuser, updateAvatar }) => {
   const [info, updateinfo] = useState(null);
+  const navigate = useNavigate();
   const [modalIsOpen, setIsOpen] = useState(false);
+  const LogOutHandler = async () => {
+    Swal.fire({
+      title: "Bạn có muốn đăng xuất",
+      showDenyButton: true,
+      icon: "info",
+      confirmButtonText: "Xác nhận",
+    }).then(async (result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        const response = await postRequest(
+          `${process.env.REACT_APP_API_URL}/api/auth/logout`
+        );
+        if (!response.error) {
+          navigate("/login");
+        } else {
+          Swal.fire("Đăng xuất thất bại", "", "error");
+        }
+      }
+    });
+  };
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
@@ -189,7 +211,7 @@ const Profile = ({ changeuser, updateAvatar }) => {
 
           <h5>tin nhắn riêng tư</h5>
         </button>
-        <button className=" flex space-x-2">
+        <button onClick={LogOutHandler} className=" flex space-x-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
