@@ -37,7 +37,7 @@ const EachChatRoom = ({ chatroom, onClick, currentRooms }) => {
               <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
             </div>
             <div className=" flex flex-col font-medium space-y-0.5 justify-center items-start">
-              <p className="">{chatroom.roomName}</p>
+              <p className="">{chatroom?.roomName || "Hi"}</p>
               {chatroom?.latestMessage && (
                 <p className=" text-sm text-white scale-y-95">
                   {shortenString(
@@ -89,7 +89,10 @@ const EachChatRoom = ({ chatroom, onClick, currentRooms }) => {
             </div>
           </div>
           <div className=" flex flex-col pl-1 space-y-0.5 justify-center items-start">
-            <p className=" font-medium">{chatroom.roomName}</p>
+            <p className=" font-medium">
+              {chatroom?.roomName ||
+                `${chatroom.participants[0].username},${chatroom.participants[1].username}`}
+            </p>
             {chatroom?.latestMessage ? (
               <p className=" text-sm text-stone-400 scale-y-95">
                 {shortenString(

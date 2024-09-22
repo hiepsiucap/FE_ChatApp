@@ -3,13 +3,16 @@ import { useState } from "react";
 import logo from "../assets/logo.svg";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+
 import { postRequest } from "../utilz/Request/Request";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
   const [username, ChangeEmail] = useState("");
+  const [isLoading, changeIsLoading] = useState(false);
   const [password, ChangePassword] = useState("");
   const onSubmitHandler = async (e) => {
+    changeIsLoading(true);
     e.preventDefault();
     const body = { username, password };
     const data = await postRequest(
@@ -22,6 +25,7 @@ const Login = () => {
         text: data?.message || "Lôĩ không xác định !",
         icon: "error",
       });
+      changeIsLoading(false);
     } else {
       navigate("/chat");
     }
@@ -52,9 +56,33 @@ const Login = () => {
           onChange={(e) => ChangePassword(e.target.value)}
         />
         <div className=" pt-3"></div>
-        <button className=" border bg-background px-6 py-3 rounded-full text-white font-bold  ">
-          Đăng nhập
-        </button>
+        {!isLoading ? (
+          <button className=" rounded-2xl border w-fit px-5 py-2 text-lg bg-background min-w-40 text-white font-bold font-Roboto bg-opacity-90">
+            Đăng nhập
+          </button>
+        ) : (
+          <button
+            disabled
+            className=" rounded-2xl border w-fit px-5 py-2 text-lg bg-background min-w-40 text-white font-bold font-Roboto bg-opacity-90"
+          >
+            <div className=" animate-spin flex justify-center items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                />
+              </svg>
+            </div>
+          </button>
+        )}
         <Link to="/signup" className=" text-gray-500">
           Đăng kí tài khoản
         </Link>

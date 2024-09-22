@@ -591,7 +591,8 @@ const Chat = () => {
                       </div>
                       <div>
                         <div className=" font-medium">
-                          {currentRooms.roomName}
+                          {currentRooms?.roomName ||
+                            `${currentRooms.participants[0].username},${currentRooms.participants[1].username}`}
                         </div>
                         <div className=" text-sm text-stone-400">
                           Đang hoạt động

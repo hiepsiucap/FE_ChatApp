@@ -106,7 +106,7 @@ const SignUp = () => {
         </div>
       </Modal>
       <img src={logo} alt="" className=" w-32" />
-      <div className=" text-3xl font-Roboto font-bold bg-gradient-to-r from-primary via-secondary to-background inline-block text-transparent bg-clip-text">
+      <div className=" hidden md:block text-3xl font-Roboto font-bold bg-gradient-to-r from-primary via-secondary to-background  text-transparent bg-clip-text">
         Kết nối với những người bạn yêu quý.
       </div>
       <div className=" text-3xl font-Roboto font-bold bg-gradient-to-r pt-6 from-primary via-secondary to-background inline-block text-transparent bg-clip-text">
@@ -118,7 +118,7 @@ const SignUp = () => {
       >
         <input
           type="text"
-          className=" px-3 pr-12 py-2 border text-lg w-1/4 rounded-md border-gray-300 "
+          className=" px-3 pr-12 py-2 border text-lg w-1/4 min-w-72 rounded-md border-gray-300 "
           placeholder="Email "
           id="email"
           onChange={onChangeData}
@@ -126,27 +126,27 @@ const SignUp = () => {
 
         <input
           type="text"
-          className=" px-3 pr-12 py-2 border text-lg w-1/4 rounded-md border-gray-300 "
+          className=" px-3 pr-12 py-2 border text-lg w-1/4 min-w-72  rounded-md border-gray-300 "
           placeholder="số điện thoại"
           id="phoneNumber"
           onChange={onChangeData}
         />
         <input
           type="text"
-          className=" px-3 pr-12 py-2 border text-lg w-1/4 rounded-md border-gray-300 "
+          className=" px-3 pr-12 py-2 border text-lg w-1/4 min-w-72  rounded-md border-gray-300 "
           placeholder="Tên"
           id="username"
           onChange={onChangeData}
         />
         <input
           type="text"
-          className=" px-3 pr-12 py-2 border text-lg w-1/4 rounded-md border-gray-300 "
+          className=" px-3 pr-12 py-2 border text-lg w-1/4 min-w-72  rounded-md border-gray-300 "
           placeholder="Mật khẩu"
           id="password"
           onChange={onChangeData}
         />
         <div className=" pt-3"></div>
-        <button className=" border bg-background px-6 py-3 rounded-full text-white font-bold  ">
+        <button className=" border bg-background px-6 py-3 md:px-16 rounded-full text-white font-bold  ">
           Đăng kí
         </button>
         <Link to="/login" className=" text-gray-500">

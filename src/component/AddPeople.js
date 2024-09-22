@@ -80,7 +80,7 @@ const AddPeople = () => {
       <input
         type="text"
         className=" bg-opacity-0 bg-white focus:outline-none focus:ring-0 border-0 border-opacity-0 focus:border-0 focus:border-opacity-0 w-full text-sm"
-        placeholder="tìm kiếm tin nhắn "
+        placeholder="tìm kiếm người khác "
         value={query}
         onChange={(e) => setQuery(e.target?.value)}
       />
