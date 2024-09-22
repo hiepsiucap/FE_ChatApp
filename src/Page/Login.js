@@ -44,7 +44,7 @@ const Login = () => {
         <input
           type="text"
           className=" px-3 pr-12 py-2 border text-lg w-1/4 min-w-80 rounded-md border-gray-300 "
-          placeholder="Email hoặc số điện thoại"
+          placeholder="username"
           value={username}
           onChange={(e) => ChangeEmail(e.target.value)}
         />

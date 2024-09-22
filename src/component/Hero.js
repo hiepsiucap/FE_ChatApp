@@ -47,7 +47,7 @@ const Hero = () => {
         >
           <input
             type="text"
-            placeholder="Email hoặc số điện thoại"
+            placeholder="username"
             className=" font-Roboto px-3 py-2 bg-slate-100 text-Roboto text-lg border  w-2/3 rounded-lg min-w-72"
             value={username}
             onChange={(e) => ChangeEmail(e.target.value)}
