@@ -122,7 +122,6 @@ const Profile = ({ changeuser, updateAvatar }) => {
       setIsOpen(false);
     }
   };
-  console.log(info);
   return (
     <div className=" flex px-4 py-4 space-y-2 w-full h-full bg-bg2 text-stone-300 font-medium  font-Roboto  flex-col items-start">
       <div className=" flex flex-col space-y-6">

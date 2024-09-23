@@ -1,7 +1,6 @@
 /** @format */
 import { motion } from "framer-motion";
 const Message = ({ user, message, group }) => {
-  console.log(message);
   if (message.userId == user)
     return (
       <motion.div

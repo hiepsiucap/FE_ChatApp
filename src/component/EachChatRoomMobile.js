@@ -5,7 +5,6 @@ import { NameTool } from "../utilz/NameTool";
 import { shortenString } from "../utilz/UpdateString";
 
 const EachChatRoomMobile = ({ chatroom, onClick, currentRooms }) => {
-  console.log(chatroom.roomId);
   if (chatroom.group) {
     if (!chatroom.seen) {
       return (

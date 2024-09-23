@@ -5,7 +5,6 @@ import cancel from "../assets/cancel.png";
 import success from "../assets/success.png";
 const AuthPage = () => {
   const data = useLoaderData();
-  console.log(data);
   return (
     <section className=" h-screen flex flex-col space-x-2 items-center justify-center ">
       {!data.error ? (

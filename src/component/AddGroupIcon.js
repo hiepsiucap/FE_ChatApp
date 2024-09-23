@@ -46,7 +46,6 @@ const AddGroupIcon = () => {
   const [GroupName, updateGroupName] = useState("");
   const [query, setQuery] = useState("");
   const [tempUser, setTempUser] = useState(null);
-  console.log(listMember);
   useEffect(() => {
     const GetListMember = async () => {
       try {
@@ -111,7 +110,6 @@ const AddGroupIcon = () => {
     const result = selectedOptions.map((member) => {
       return { userId: Number(member) };
     });
-    console.log(result);
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/api/chatrooms/AddToGroup/${chatroomId}`,
@@ -172,7 +170,6 @@ const AddGroupIcon = () => {
   }
   const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
   const [selectedOptions, setSelectedOptions] = useState([]);
-  console.log(selectedOptions);
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     if (checked) {

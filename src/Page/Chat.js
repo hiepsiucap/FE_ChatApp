@@ -91,7 +91,6 @@ const Chat = () => {
   }
   useEffect(() => {
     if (chatrooms?.length > 0) {
-      console.log(1);
       const sortedChatrooms = chatrooms.sort((a, b) => {
         if (!a?.latestMessage?.sentAt) return 1;
         if (!b?.latestMessage?.sentAt) return -1;
@@ -137,7 +136,6 @@ const Chat = () => {
       else if (currentRooms.roomId) error = "current";
     }
   };
-  console.log(currentRooms, messages);
   useEffect(() => {
     const getrequest = async () => {
       const data = await getRequest(
@@ -212,7 +210,6 @@ const Chat = () => {
     }
     const controller = new AbortController();
     abortControllerRef.current = controller;
-    console.log(e.currentTarget.id);
     const id = e.currentTarget.id;
     setchangechatroomloading(true);
     try {
@@ -233,7 +230,6 @@ const Chat = () => {
         });
       });
       if (!result.error) setMessages(result);
-      console.log(result);
       setCurrentRooms(chatrooms.find((chatroom) => chatroom.roomId == id));
       setHasMore(true);
       setPage(1);
@@ -263,7 +259,7 @@ const Chat = () => {
               `/topic/chatroom/${chatroom.roomId}`,
               (message) => {
                 const newMessage = JSON.parse(message.body);
-                console.log(newMessage);
+
                 if (currentRoomRef.current?.roomId === newMessage.roomId) {
                   upbacktobot(true);
                   setMessages((prev) => ({
@@ -329,12 +325,9 @@ const Chat = () => {
       const socket = new SockJS(`${process.env.REACT_APP_API_URL}/ws`);
       const stompClient = Stomp.over(socket);
       stompClient.connect({}, (frame) => {
-        console.log("Connected: " + frame);
         setStompClient(stompClient);
       });
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
   useEffect(() => {
     if (page !== 1 || hasMore === false) upbacktobot(false);
@@ -345,17 +338,15 @@ const Chat = () => {
       }
       setLoading(true);
       const NewMessage = await GetMessage(currentRooms?.roomId, page);
-      console.log(NewMessage);
       if (!NewMessage.error) {
         if (NewMessage?.listMessage?.length === 0) {
-          console.log("hello");
           setHasMore(false);
         } else {
           setMessages((prev) => ({
             ...prev,
             listMessage: [...NewMessage.listMessage, ...prev.listMessage],
           }));
-          console.log(page);
+
           setPage((prev) => prev + 1);
           if (messagesEndRef.current) {
             messagesEndRef.current.scrollTop =
@@ -386,9 +377,7 @@ const Chat = () => {
   }, [page, hasMore]);
   const subscribeToRoom = (roomId) => {
     if (stompClient) {
-      stompClient.subscribe("/topic/chatroom/" + roomId, (messageOutput) => {
-        console.log(messageOutput);
-      });
+      stompClient.subscribe("/topic/chatroom/" + roomId, (messageOutput) => {});
     }
   };
   function afterOpenModal() {

@@ -40,7 +40,6 @@ const SignUp = () => {
       return { ...prev, [e.target.id]: e.target.value };
     });
   };
-  console.log(submitdata);
   const onSubmitHandler = async (e) => {
     setIsOpen(true);
     e.preventDefault();

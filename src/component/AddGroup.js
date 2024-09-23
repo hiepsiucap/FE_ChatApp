@@ -45,7 +45,6 @@ const AddGroup = () => {
   const [GroupName, updateGroupName] = useState("");
   const [query, setQuery] = useState("");
   const [tempUser, setTempUser] = useState(null);
-  console.log(listMember);
   useEffect(() => {
     const UpdateStyleGroup = () => {
       updatestyle(UpdateStyleModal());
