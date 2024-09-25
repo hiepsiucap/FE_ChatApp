@@ -3,11 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { getRequest, postRequest } from "../utilz/Request/Request";
 import _ from "lodash";
+import { useNavigate } from "react-router";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 /** @format */
 const AddPeople = () => {
   const [tempUser, setTempUser] = useState(null);
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const [loading, changeloading] = useState(false);
   const fetchUsers = async (searchQuery) => {
     try {
       const data = await getRequest(
@@ -24,6 +27,7 @@ const AddPeople = () => {
   };
   const onsubmitHandler = async (e) => {
     e.preventDefault();
+    changeloading(true);
     const chatRoom = await postRequest(
       `${process.env.REACT_APP_API_URL}/api/chatrooms/createPrivate/${e.target.id}`
     );
@@ -33,12 +37,15 @@ const AddPeople = () => {
         text: chatRoom?.message,
         icon: "error",
       });
+      changeloading(false);
     } else {
       Swal.fire({
         title: "Kết bạn thành công",
         text: "",
         icon: "success",
       });
+      changeloading(false);
+      navigate(0);
     }
   };
   const debounceFetchUsers = useCallback(
@@ -106,27 +113,46 @@ const AddPeople = () => {
                 {tempUser.username}
               </p>
             </div>
+
             <button
               className=" hover:scale-110"
               key={tempUser.userId}
               id={tempUser.userId}
+              disabled={loading}
               onClick={onsubmitHandler}
             >
-              <svg
-                id={tempUser.userId}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="#38D7E7"
-                class="size-5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
-                />
-              </svg>
+              {!loading ? (
+                <svg
+                  id={tempUser.userId}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="#38D7E7"
+                  class="size-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="#38D7E7"
+                  className="size-5 animate-spin"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
+                </svg>
+              )}
             </button>
           </label>
         </button>
