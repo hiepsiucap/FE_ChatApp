@@ -5,6 +5,7 @@ export const FindMinus = (time) => {
     return "";
   }
   const inputTime = new Date(time);
+  inputTime.setHours(inputTime.getHours() + 7);
   const currentTime = new Date();
   const diffTime = currentTime - inputTime;
   const minutesDifference = Math.floor(diffTime / 1000 / 60);

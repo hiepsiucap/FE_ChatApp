@@ -1,5 +1,5 @@
 /** @format */
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Modal from "react-modal";
 
 import { getRequest, postRequest } from "../utilz/Request/Request";
@@ -44,8 +44,25 @@ const AddGroupIcon = () => {
   const [style, updatestyle] = useState(UpdateStyleModal());
   const [listMember, updateListMember] = useState(null);
   const [GroupName, updateGroupName] = useState("");
+  const [loading, updateLoading] = useState(false);
+  const refinput = useRef(null);
+  const [file, setFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [query, setQuery] = useState("");
   const [tempUser, setTempUser] = useState(null);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+
+    // Generate a preview URL for the image
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result); // Set the preview image URL
+    };
+    if (selectedFile) {
+      reader.readAsDataURL(selectedFile); // Read file as Data URL for preview
+    }
+  };
   useEffect(() => {
     const GetListMember = async () => {
       try {
@@ -94,59 +111,77 @@ const AddGroupIcon = () => {
   };
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    updateLoading(true);
+    if (!GroupName) return;
     const roomName1 = { roomName: GroupName };
-    const chatRoom = await postRequest(
-      `${process.env.REACT_APP_API_URL}/api/chatrooms/createGroup`,
-      roomName1
+    const formData = new FormData();
+    formData.append(
+      "chatRoom",
+      new Blob([JSON.stringify(roomName1)], {
+        type: "application/json",
+      })
     );
-    if (chatRoom.error) {
-      Swal.fire({
-        title: "Đăng kí thất bại",
-        text: chatRoom?.message,
-        icon: "error",
-      });
-    }
-    const chatroomId = chatRoom.roomId;
-    const result = selectedOptions.map((member) => {
-      return { userId: Number(member) };
-    });
+    formData.append("file", file);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/chatrooms/AddToGroup/${chatroomId}`,
+        `${process.env.REACT_APP_API_URL}/api/chatrooms/createGroup`,
         {
           method: "POST",
-          withCredntials: true,
+          withCredentials: true,
           credentials: "include",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(result),
+          body: formData,
         }
       );
-      const data = await response.json();
-      if (!response.ok) {
+      const chatroomId = await response.json();
+
+      const result = selectedOptions.map((member) => {
+        return { userId: Number(member) };
+      });
+      console.log(result);
+      try {
+        if (!chatroomId.roomId) throw new Error("Tạo phòng thất bại");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/chatrooms/AddToGroup/${chatroomId.roomId}`,
+          {
+            method: "POST",
+            withCredntials: true,
+            credentials: "include",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(result),
+          }
+        );
+        const data = await response.json();
+        updateLoading(false);
+        if (!response.ok) {
+          Swal.fire({
+            title: "Đăng kí thất bại",
+            text: data?.message,
+            icon: "error",
+          });
+        }
+        Swal.fire({
+          title: "Đăng kí thành công",
+          text: data?.message,
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      } catch (error) {
         Swal.fire({
           title: "Đăng kí thất bại",
-          text: data?.message,
+          text: error,
           icon: "error",
         });
       }
-      Swal.fire({
-        title: "Đăng kí thành công",
-        text: data?.message,
-        icon: "success",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.reload();
-        }
-      });
+      console.log("Group chat created:", response.data);
     } catch (error) {
-      Swal.fire({
-        title: "Đăng kí thất bại",
-        text: error,
-        icon: "error",
-      });
+      console.error("Error creating group chat:", error.message);
+      updateLoading(false);
     }
   };
   const debounceFetchUsers = useCallback(
@@ -223,31 +258,55 @@ const AddGroupIcon = () => {
       >
         <form onSubmit={onSubmitHandler} className=" bg-bg2 relative h-full">
           <div className="p-4 font-medium text-white">Tạo nhóm</div>
+          <input
+            type="file"
+            ref={refinput}
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          ></input>
           <div className=" w-full border border-gray-500"></div>
           <div className=" flex-col space-y-6 px-4 ">
             <div className=" flex    items-end pt-6  space-x-2">
-              <div className=" p-2 border rounded-full ">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#FFFFFF
+              <button
+                type="button"
+                onClick={() => {
+                  refinput.current.click();
+                }}
+                className={
+                  imagePreview
+                    ? "   w-11 h-11 rounded-full hover:opacity-70 "
+                    : " p-2 border rounded-full "
+                }
+              >
+                {!imagePreview ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="#FFFFFF
 "
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
-                  />
-                </svg>
-              </div>
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                ) : (
+                  <img
+                    alt="Hello"
+                    className=" w-10 h-10 rounded-full"
+                    src={imagePreview}
+                  ></img>
+                )}
+              </button>
               <input
                 type="text"
                 className=" text-white  border-0 border-b  py-1 px-2 w-full bg-transparent "
@@ -362,10 +421,28 @@ const AddGroupIcon = () => {
           </div>
           <div className=" absolute bottom-20 w-full border border-gray-500"></div>
           <button
+            disabled={loading}
             type="submit"
-            className=" text-gray-700 bottom-6 text-sm font-medium rounded-lg bg-primary p-2 px-4 right-6 absolute"
+            className=" text-gray-700 bottom-6 w-32 text-sm flex items-center justify-center font-medium rounded-lg bg-primary p-2 px-4 right-6 absolute"
           >
-            Tạo nhóm
+            {loading ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                className="size-5 animate-spin"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                />
+              </svg>
+            ) : (
+              " Tạo nhóm"
+            )}
           </button>
         </form>
       </Modal>

@@ -19,23 +19,35 @@ const EachChatRoom = ({ chatroom, onClick, currentRooms }) => {
           }
         >
           <div className="flex space-x-3 items-center w-full">
-            <div className="w-14 h-14 relative">
-              {chatroom.participants[0] && (
+            {chatroom?.roomImage ? (
+              <div className=" px-1 relative">
                 <img
-                  src={chatroom.participants[0].ava}
+                  src={chatroom?.roomImage}
                   alt=""
-                  className=" w-9 h-9 absolute rounded-full right-0 top-0"
+                  className=" w-12 h-12 rounded-full "
                 />
-              )}
-              {chatroom.participants[1] && (
-                <img
-                  src={chatroom.participants[1].ava}
-                  alt=""
-                  className=" w-9 h-9 absolute rounded-full left-0 bottom-0"
-                />
-              )}
-              <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
-            </div>
+                <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
+              </div>
+            ) : (
+              <div className="w-14 h-14 relative">
+                {chatroom.participants[0] && (
+                  <img
+                    src={chatroom.participants[0].ava}
+                    alt=""
+                    className=" w-9 h-9 absolute rounded-full right-0 top-0"
+                  />
+                )}
+                {chatroom.participants[1] && (
+                  <img
+                    src={chatroom.participants[1].ava}
+                    alt=""
+                    className=" w-9 h-9 absolute rounded-full left-0 bottom-0"
+                  />
+                )}
+                */
+                <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
+              </div>
+            )}
             <div className=" flex flex-col font-medium space-y-0.5 justify-center items-start">
               <p className="">{chatroom?.roomName || "Hi"}</p>
               {chatroom?.latestMessage && (
@@ -68,25 +80,35 @@ const EachChatRoom = ({ chatroom, onClick, currentRooms }) => {
           }
         >
           <div className="">
-            <div className="w-14 h-14 relative">
-              {chatroom.participants[0] && (
+            {chatroom?.roomImage ? (
+              <div className=" px-1 relative">
                 <img
-                  src={chatroom.participants[0].ava}
+                  src={chatroom?.roomImage}
                   alt=""
-                  className=" w-9 h-9 absolute rounded-full right-0 top-0"
+                  className=" w-12 h-12 rounded-full "
                 />
-              )}
-              {chatroom.participants[1] && (
-                <img
-                  src={chatroom.participants[1].ava}
-                  alt=""
-                  className=" w-9 h-9 absolute rounded-full left-0 bottom-0"
-                />
-              )}
-              {
                 <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
-              }
-            </div>
+              </div>
+            ) : (
+              <div className="w-14 h-14 relative">
+                {chatroom.participants[0] && (
+                  <img
+                    src={chatroom.participants[0].ava}
+                    alt=""
+                    className=" w-9 h-9 absolute rounded-full right-0 top-0"
+                  />
+                )}
+                {chatroom.participants[1] && (
+                  <img
+                    src={chatroom.participants[1].ava}
+                    alt=""
+                    className=" w-9 h-9 absolute rounded-full left-0 bottom-0"
+                  />
+                )}
+                */
+                <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
+              </div>
+            )}
           </div>
           <div className=" flex flex-col pl-1 space-y-0.5 justify-center items-start">
             <p className=" font-medium">
@@ -166,7 +188,7 @@ const EachChatRoom = ({ chatroom, onClick, currentRooms }) => {
           id={chatroom.roomId}
           onClick={onClick}
           className={
-            currentRooms == chatroom.roomId
+            currentRooms === chatroom.roomId
               ? "flex space-x-3 items-center w-full bg-stone-200 bg-opacity-30 py-2 rounded-lg"
               : "flex space-x-3 items-center py-2 w-full"
           }

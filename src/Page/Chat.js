@@ -558,23 +558,35 @@ const Chat = () => {
                   <div className="flex space-x-2 items-center">
                     {currentRooms?.group ? (
                       <>
-                        <div className="w-14 h-14 relative">
-                          {currentRooms?.participants[0] && (
+                        {currentRooms?.roomImage ? (
+                          <div className=" px-1 relative">
                             <img
-                              src={currentRooms?.participants[0].ava}
+                              src={currentRooms?.roomImage}
                               alt=""
-                              className=" w-9 h-9 absolute rounded-full right-0 top-0"
+                              className=" w-12 h-12 rounded-full "
                             />
-                          )}
-                          {currentRooms?.participants[1] && (
-                            <img
-                              src={currentRooms?.participants[1].ava}
-                              alt=""
-                              className=" w-9 h-9 absolute rounded-full left-0 bottom-0"
-                            />
-                          )}
-                          <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
-                        </div>
+                            <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
+                          </div>
+                        ) : (
+                          <div className="w-14 h-14 relative">
+                            {currentRooms.participants[0] && (
+                              <img
+                                src={currentRooms.participants[0].ava}
+                                alt=""
+                                className=" w-9 h-9 absolute rounded-full right-0 top-0"
+                              />
+                            )}
+                            {currentRooms.participants[1] && (
+                              <img
+                                src={currentRooms.participants[1].ava}
+                                alt=""
+                                className=" w-9 h-9 absolute rounded-full left-0 bottom-0"
+                              />
+                            )}
+
+                            <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
+                          </div>
+                        )}
                         <div>
                           <div className=" font-medium">
                             {currentRooms?.roomName ||
@@ -819,23 +831,35 @@ const Chat = () => {
                   <div className=" flex flex-col items-center">
                     {currentRooms?.group ? (
                       <>
-                        <div className="w-20 h-20 relative">
-                          {currentRooms?.participants && (
+                        {currentRooms?.roomImage ? (
+                          <div className=" px-1 relative">
                             <img
-                              src={currentRooms?.participants[0].ava}
+                              src={currentRooms?.roomImage}
                               alt=""
-                              className=" w-14 h-14 absolute rounded-full right-0 top-0"
+                              className=" w-20 h-20 rounded-full "
                             />
-                          )}
-                          {currentRooms?.participants[1] && (
-                            <img
-                              src={currentRooms?.participants[1].ava}
-                              alt=""
-                              className=" w-14 h-14 absolute rounded-full left-0 bottom-0"
-                            />
-                          )}
-                          <div className=" w-3 h-3 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
-                        </div>
+                            <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
+                          </div>
+                        ) : (
+                          <div className="w-20 h-20 relative">
+                            {currentRooms.participants[0] && (
+                              <img
+                                src={currentRooms.participants[0].ava}
+                                alt=""
+                                className=" w-12 h-12 absolute rounded-full right-0 top-0"
+                              />
+                            )}
+                            {currentRooms.participants[1] && (
+                              <img
+                                src={currentRooms.participants[1].ava}
+                                alt=""
+                                className=" w-12 h-12 absolute rounded-full left-0 bottom-0"
+                              />
+                            )}
+
+                            <div className=" w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg border border-green-500   absolute right-1 bottom-1"></div>
+                          </div>
+                        )}
                       </>
                     ) : (
                       <>
