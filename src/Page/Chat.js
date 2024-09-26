@@ -113,13 +113,16 @@ const Chat = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    console.log(e);
     if (stompClient && stompClient?.connected && BodyMessage && currentRooms) {
       stompClient.send(
         "/app/message",
         {},
         JSON.stringify({
-          messageId:
-            messages?.listMessage[messages?.listMessage.length - 1]?.messageId,
+          messageId: messages?.listMessage?.length
+            ? messages?.listMessage[messages?.listMessage?.length - 1]
+                ?.messageId
+            : 0,
           roomId: currentRooms.roomId,
           username: user.username,
           userId: user.userId,
@@ -134,6 +137,7 @@ const Chat = () => {
       else if (!stompClient?.connected) error = "connected";
       else if (!BodyMessage) error = "body";
       else if (currentRooms.roomId) error = "current";
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -248,7 +252,7 @@ const Chat = () => {
         }
       });
       let subscriptions = [];
-      if (stompClient && chatrooms.length > 0) {
+      if (stompClient && chatrooms?.length > 0) {
         chatrooms.forEach((chatroom) => {
           if (!prevRoomIds.includes(chatroom.roomId)) {
             const subscription = stompClient.subscribe(
@@ -260,7 +264,9 @@ const Chat = () => {
                   upbacktobot(true);
                   setMessages((prev) => ({
                     ...prev,
-                    listMessage: [...prev.listMessage, { ...newMessage }],
+                    listMessage: !prev?.listMessage
+                      ? [newMessage]
+                      : [...prev.listMessage, { ...newMessage }],
                   }));
                   Changechatrooms((prev) => {
                     if (prev) {
@@ -325,6 +331,7 @@ const Chat = () => {
       });
     } catch (e) {}
   };
+  console.log(messages);
   useEffect(() => {
     if (page !== 1 || hasMore === false) upbacktobot(false);
     const LoadMoreMessage = async () => {
@@ -692,17 +699,18 @@ const Chat = () => {
                     </div>
                   )}
                   {messages?.listMessage &&
-                    messages?.listMessage.length > 0 &&
+                    messages?.listMessage?.length > 0 &&
                     displayFirstMessageUser(
                       messages?.listMessage,
                       currentRooms?.group,
                       messages.user_id
                     ).map((message) => {
+                      console.log(message);
                       return (
                         <Message
                           message={message}
                           key={message.messageId}
-                          user={messages.user_id}
+                          user={user.userId}
                           group={currentRooms?.group}
                         ></Message>
                       );

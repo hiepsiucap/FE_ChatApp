@@ -28,6 +28,7 @@ const AddPeople = () => {
   const onsubmitHandler = async (e) => {
     e.preventDefault();
     changeloading(true);
+    if (!process.env.REACT_APP_API_URL || !e.target.id) return;
     const chatRoom = await postRequest(
       `${process.env.REACT_APP_API_URL}/api/chatrooms/createPrivate/${e.target.id}`
     );
